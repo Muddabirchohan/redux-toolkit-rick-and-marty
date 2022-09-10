@@ -12,6 +12,17 @@ const initialState: any = {
 }
 
 
+
+export const filterCharacter = createAsyncThunk(
+  'players/filter',
+  async(param:any) => {
+    const response = await fetch(`https://rickandmortyapi.com/api/character/?name=${param}`);
+    const dat = await response.json()
+    return dat
+  }
+)
+
+
 export const singleCharacter = createAsyncThunk(
     'players/single',
     async (char:any) => {
@@ -99,15 +110,37 @@ export const playerSlice = createSlice({
 
       builder
       .addCase(singleCharacter.pending, (state) => {
-        state.status = 'loading';
+        state.singleCharacterStatus = 'loading';
       })
       .addCase(singleCharacter.fulfilled, (state, action) => {
         console.log("pl",action.payload)
-        state.status = 'idle';
+        state.singleCharacterStatus = 'idle';
         state.singleCharacter = action.payload;
       })
       .addCase(singleCharacter.rejected, (state) => {
-        state.status = 'failed';
+        state.singleCharacterStatus = 'failed';
+      });
+
+
+      builder
+      .addCase(filterCharacter.pending, (state) => {
+        state.userstatus = 'loading';
+      })
+      .addCase(filterCharacter.fulfilled, (state, action) => {
+
+        if(action.payload.results){
+        state.userstatus = 'idle';
+        state.users = [...action.payload.results];
+        }
+
+        if(action.payload.error){
+          state.userstatus = 'idle';
+
+        }
+
+      })
+      .addCase(filterCharacter.rejected, (state) => {
+        state.userstatus = 'failed';
       });
 
 
