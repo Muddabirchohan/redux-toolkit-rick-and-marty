@@ -19,7 +19,7 @@ export function User ({item}:any) {
         <Link to={{ pathname: "/single", search: `?id=${item.id}` }}>
     
 
-        <img src={item.image} style={{height: "250px"}}/>
+        <img src={item.image} style={{height: "290px",}}/>
         <p>  {item.name}  </p>
 
         {/* <p> {item.status} </p> */}

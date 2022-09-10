@@ -1,6 +1,19 @@
 .favoritesParent {
     display: flex;
     align-items: center;
-    gap: 300px;
+    gap: 200px;
+    padding: 10px;
   }
   
+
+  .favourites-error{
+    width: 100px;
+    height: 100px;    
+    position: absolute;
+    top:0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    
+    margin: auto;
+  }
