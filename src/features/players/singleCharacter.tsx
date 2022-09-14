@@ -12,17 +12,15 @@ import { Typography } from 'antd';
 
 import { Link, useLocation } from 'react-router-dom';
 import { Button, Col, Image, Row } from 'antd';
+import { singleUser } from './player';
 const { Title,Text } = Typography;
 
 export function SingleCharacter() {
 
 
-    const location = useLocation();
-
+  const location = useLocation();
 
   const dispatch = useAppDispatch();
-
-  console.log("ss",location.search.split("=")[1])
 
   useEffect(()=>{
    dispatch(singleCharacter(`${location.search.split("=")[1]}`))
@@ -30,7 +28,7 @@ export function SingleCharacter() {
   },[])
 
 
-  const singleCh = useAppSelector(single);
+  const singleCh : singleUser = useAppSelector(single);
 
 
   const addFavourite = () => {
@@ -39,10 +37,6 @@ export function SingleCharacter() {
   }
 
   const style: React.CSSProperties = {  padding: '70px 0' };
-  const style2: React.CSSProperties = {  padding: '80px 0' };
-
-
-
 
   return (
     <div>
@@ -85,7 +79,8 @@ export function SingleCharacter() {
 
 </div>
 
-    <div style={{paddingTop: "50px"}}>        <Button type="ghost" onClick={addFavourite}>  add to favourites </Button>
+    <div style={{paddingTop: "50px"}}>      
+      <Button type="ghost" onClick={addFavourite}>  add to favourites </Button>
 </div> 
       </Col>
     </Row>

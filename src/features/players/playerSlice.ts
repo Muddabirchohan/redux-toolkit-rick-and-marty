@@ -62,9 +62,7 @@ export const playerSlice = createSlice({
     },
 
     addToFavourites: (state,action) => {
-      
-      const favLength = state.favouritesList.length;
-      
+            
         const favIds = state.favouritesList.map((item:any) => item.id)
         favIds.forEach((id:any) => {
             if(id == action.payload.id){
@@ -72,10 +70,10 @@ export const playerSlice = createSlice({
               found.quantity+=1
             }
         });
-        if(!favIds.includes(action.payload.id)){
+
+        if(!favIds.includes(action.payload.id)){          
           action.payload = {...action.payload,quantity: 1}
-          state.favouritesList = [...state.favouritesList,action.payload]
-        
+          state.favouritesList = [...state.favouritesList,action.payload]   
       }
     },
 
@@ -128,6 +126,7 @@ export const playerSlice = createSlice({
       })
       .addCase(filterCharacter.fulfilled, (state, action) => {
 
+        console.log("payload result",action.payload.results)
         if(action.payload.results){
         state.userstatus = 'idle';
         state.users = [...action.payload.results];

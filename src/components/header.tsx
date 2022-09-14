@@ -19,7 +19,7 @@ export const Header = () => {
 
     return (
         <PageHeader
-            style={{backgroundColor: 'rgb(26 144 255)'}}
+            style={{backgroundColor: 'rgb(169 177 185)'}}
             className="site-page-header"
             title="Rick and Morty"
             subTitle="store"

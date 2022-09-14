@@ -1,4 +1,4 @@
-import { Button } from 'antd';
+import { Button, Col, Divider, InputNumber, Row, Typography } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 
@@ -14,13 +14,21 @@ import {
 
 import "./favourite.css"
 import { message, Popconfirm } from 'antd';
+import { singleUser } from '../features/players/player';
+const { Title, Text } = Typography;
+
+
+
+interface SingleUserExtender extends singleUser {
+    quantity: number
+}
 
 
 
 export function Favourites({ item }: any) {
 
 
-    const favourite = useAppSelector(favourites);
+    const favourite: SingleUserExtender[] = useAppSelector(favourites);
     const dispatch = useAppDispatch();
 
     const confirm = (item: any) => {
@@ -38,41 +46,79 @@ export function Favourites({ item }: any) {
         dispatch(removeFromFavourites(item.id))
     }
 
+    const onChange = (items: any, e: any) => {
+        const data = { ...item, type: e.type }
+        dispatch(addToFavourites(data))
+    };
+
 
     if (favourite && favourite.length < 1) {
         return <div className='favourites-error'> No Items in Favourites</div>
     }
 
-
-
     const renderFavourites = () => {
-        return favourite.map((item: any) => {
+        return favourite.map((item: SingleUserExtender) => {
+
             return (
-                <div className="favoritesParent">
-                    <p> <img src={item.image} style={{ height: "150px", width: "150px" }} /></p>
-                    <p> {item.name} </p>
-                    <p> {item.quantity} </p>
-                    <Popconfirm
-                        title="Are you sure to delete this character?"
-                        onConfirm={() => confirm(item)}
-                        onCancel={cancel}
-                        okText="Yes"
-                        cancelText="No"
-                    >
-                        <a href="#">Delete</a>
 
-                        {/* <Button onClick={()=>removeItem(item)}> Remove </Button>  */}
-                    </Popconfirm>
+                <Row>
+
+                    <Col span={6}>
+                        <p> <img src={item.image} style={{ height: "150px", width: "150px" }} /></p>
+                    </Col>
+                    <Col span={6}>
+                        <p> {item.name} </p>
+
+                    </Col>
+                    <Col span={6}>
+                        <p> {item.quantity} </p>
+                    </Col>
 
 
-                </div>
+                    <Col span={6}>
+                        <Popconfirm
+                            title="Are you sure to delete this character?"
+                            onConfirm={() => confirm(item)}
+                            onCancel={cancel}
+                            okText="Yes"
+                            cancelText="No"
+                        >
+                            <a href="#">Delete</a>
+                        </Popconfirm>
+                    </Col>
+
+
+
+
+
+
+                </Row>
             )
         })
     }
 
     return (
         <div>
+            <br />
+            <Title level={3} type="secondary"> Favourites ({favourite.length}) </Title>
 
+            <Row>
+                <Col span={6}>
+                    <Title level={5}>  </Title>
+                </Col>
+                <Col span={6}>
+                    <Title level={5}> name </Title>
+                </Col>
+                <Col span={6}>
+                    <Title level={5}>   quantity </Title>
+                </Col>
+
+                <Col span={6}>
+                    <Title level={5}> action </Title>
+                </Col>
+            </Row>
+
+            <Divider />
             {renderFavourites()}
         </div>
     );

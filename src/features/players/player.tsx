@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import debounce from 'lodash.debounce'
 
@@ -19,17 +19,35 @@ import { Button, Spin } from 'antd';
 import { Input, Space } from 'antd';
 import { AudioOutlined } from '@ant-design/icons';
 import { Col, Row } from 'antd';
+import SingleMap from "./../../components/maps"
+
+
 
 
 
 const { Search } = Input;
 
 
+export type singleUser = {
+    id: number;
+    name: string;
+    status: string;
+    species: string;
+    type: string;
+    gender: string;
+    origin: object;
+    location: object;
+    image: string;
+    episode: object;
+    createdAt: object
+}
 
 
 
 
-export function Player() {
+
+
+ function Player() {
     const users = useAppSelector(allusers);
 
     const infor = useAppSelector(info);
@@ -39,13 +57,21 @@ export function Player() {
 
     const dispatch = useAppDispatch();
 
-    const [filteredUser,setFilteredUser] = useState(users)
+    const [filteredUser, setFilteredUser] = useState(users)
+    const [search, searchChange] = useState(false)
+
+    const searchValue = useRef("");
 
 
     useEffect(() => {
-        dispatch(fetchJson("https://rickandmortyapi.com/api/character"))
-
+        fetchPrevious()
     }, [])
+
+
+    const fetchPrevious = () => {
+        searchChange(false)
+        dispatch(fetchJson("https://rickandmortyapi.com/api/character"))
+    }
 
 
     const nextPage = () => {
@@ -56,45 +82,44 @@ export function Player() {
     const prevPage = () => {
 
         dispatch(fetchJson(infor?.prev))
-
-
-
     }
 
     const onSearch = debounce((e: any) => {
 
+        searchChange(true)
         // const data = users.filter((item:any) => item.name.toLowerCase().includes(e.target.value))
         // setFilteredUser(data)
-            return dispatch(filterCharacter(e.target.value))
+        return dispatch(filterCharacter(e))
 
-    },500);
-
-
-
-    if (charctersstate.userstatus == "loading") {
-        return <> <Spin /> </>
-    }
+    }, 500);
 
 
-    const filtered = filteredUser.length > 0 ? filteredUser : users
+    // if (charctersstate.userstatus == "loading") {
+    //     return <> <Spin /> </>
+    // }
+
+    const filtered: singleUser[] = users
 
     return (
-        <div>
+        <div >
             <div>
 
                 <div>
-                    <br/>
-                <Row >
-      <Col span={12} push={5}>
-      <Search placeholder="input search text" onSearch={onSearch} onChange={onSearch} enterButton size='middle' />
-
-      </Col>
-    </Row>
+                    <br />
+                    <Row >
+                        <Col span={12} push={5}>
+                            <Search placeholder="input search text" onSearch={onSearch} enterButton size='middle' />
+                        </Col>
+                        {search && <Button onClick={fetchPrevious}> clear search</Button>}
+                    </Row>
                 </div>
 
                 <div className='players-parent  '>
-                    {filtered && filtered?.map((item: any) => <User item={item} key={item.id} />)}
+                    {filtered && filtered?.map((item: singleUser) => <User {...item} key={item.id} />)}
                 </div>
+
+                <SingleMap />
+
 
                 <Button type="primary" disabled={infor.prev == null} onClick={prevPage}> prev </Button>
                 <Button type="primary" disabled={infor.next == null} onClick={nextPage}> next </Button>
@@ -102,3 +127,5 @@ export function Player() {
         </div>
     );
 }
+
+export default Player;
