@@ -24,8 +24,11 @@ interface SingleUserExtender extends singleUser {
 }
 
 
+const styles: React.CSSProperties = {  marginTop: '55px'};
+
 
 export function Favourites({ item }: any) {
+
 
 
     const favourite: SingleUserExtender[] = useAppSelector(favourites);
@@ -46,10 +49,13 @@ export function Favourites({ item }: any) {
         dispatch(removeFromFavourites(item.id))
     }
 
-    const onChange = (items: any, e: any) => {
-        const data = { ...item, type: e.type }
+
+    const onChange = (value: any,item: any) => {
+        const data = { ...item, type: value}
         dispatch(addToFavourites(data))
     };
+
+
 
 
     if (favourite && favourite.length < 1) {
@@ -58,24 +64,31 @@ export function Favourites({ item }: any) {
 
     const renderFavourites = () => {
         return favourite.map((item: SingleUserExtender) => {
-
             return (
-
                 <Row>
-
                     <Col span={6}>
                         <p> <img src={item.image} style={{ height: "150px", width: "150px" }} /></p>
                     </Col>
-                    <Col span={6}>
+                    
+                    <Col style={styles} span={6}>
                         <p> {item.name} </p>
 
                     </Col>
-                    <Col span={6}>
-                        <p> {item.quantity} </p>
+                    <Col 
+                    style={styles}
+                     span={6}>
+              
+              {/* {item.quantity >= 10 && <span> Discount  </span>} */}
+                <InputNumber 
+                    onChange={(e:any) => onChange(e,item)}
+                    className='input-quanity'
+                    value={item.quantity} 
+                />
+               
                     </Col>
-
-
-                    <Col span={6}>
+                    <Col 
+                    style={styles}
+                    span={6}>
                         <Popconfirm
                             title="Are you sure to delete this character?"
                             onConfirm={() => confirm(item)}
@@ -86,12 +99,6 @@ export function Favourites({ item }: any) {
                             <a href="#">Delete</a>
                         </Popconfirm>
                     </Col>
-
-
-
-
-
-
                 </Row>
             )
         })

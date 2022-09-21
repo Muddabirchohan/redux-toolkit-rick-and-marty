@@ -12,13 +12,12 @@ const initialState: any = {
 }
 
 
-
 export const filterCharacter = createAsyncThunk(
   'players/filter',
   async(param:any) => {
     const response = await fetch(`https://rickandmortyapi.com/api/character/?name=${param}`);
-    const dat = await response.json()
-    return dat
+    const data = await response.json()
+    return data
   }
 )
 
@@ -27,8 +26,8 @@ export const singleCharacter = createAsyncThunk(
     'players/single',
     async (char:any) => {
       const response = await fetch(`https://rickandmortyapi.com/api/character/${char}`);
-      const dat = await response.json()
-      return dat
+      const data = await response.json()
+      return data
     }
 )
 
@@ -37,19 +36,12 @@ export const fetchJson = createAsyncThunk(
     'players/fetchJson',
     async (url:any) => {
       const response = await fetch(`${url}`);
-      const dat = await response.json()
-      return dat
+      const data = await response.json()
+      return data
     }
   );
 
-  export const fetchTodos = createAsyncThunk(
-    'players/fetchtodos',
-    async () => {
-      const response = await fetch("https://jsonplaceholder.typicode.com/todos");
-      const dat = await response.json()
-      return dat
-    }
-  );
+
   
 export const playerSlice = createSlice({
   name: 'players',
@@ -62,12 +54,19 @@ export const playerSlice = createSlice({
     },
 
     addToFavourites: (state,action) => {
-            
+
+      console.log("ty[e",action.payload.type)
+
         const favIds = state.favouritesList.map((item:any) => item.id)
         favIds.forEach((id:any) => {
             if(id == action.payload.id){
               const found = state.favouritesList.find((fav:any) => fav.id == action.payload.id);
-              found.quantity+=1
+              if(action.payload.type){
+                found.quantity=action.payload.type
+              }else {
+                found.quantity=1
+
+              }
             }
         });
 
@@ -92,9 +91,6 @@ export const playerSlice = createSlice({
       })
       .addCase(fetchJson.fulfilled, (state, action) => {
 
-
-        // const split = action.payload?.info?.next?.split("=")[1] - 1;
-
         state.userstatus = 'fulfilled';
         state.users = [...action.payload.results];
         state.info = action.payload?.info
@@ -111,7 +107,6 @@ export const playerSlice = createSlice({
         state.singleCharacterStatus = 'loading';
       })
       .addCase(singleCharacter.fulfilled, (state, action) => {
-        console.log("pl",action.payload)
         state.singleCharacterStatus = 'idle';
         state.singleCharacter = action.payload;
       })
@@ -134,15 +129,12 @@ export const playerSlice = createSlice({
 
         if(action.payload.error){
           state.userstatus = 'idle';
-
         }
 
       })
       .addCase(filterCharacter.rejected, (state) => {
         state.userstatus = 'failed';
       });
-
-
 
   },
   

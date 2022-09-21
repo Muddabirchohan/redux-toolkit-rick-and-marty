@@ -8,7 +8,6 @@ import {
     increment,
     fetchJson,
     allusers,
-    fetchTodos,
     filterCharacter,
     info,
     playerState
@@ -45,24 +44,16 @@ export type singleUser = {
 
 
 
-
-
  function Player() {
     const users = useAppSelector(allusers);
-
     const infor = useAppSelector(info);
     const charctersstate = useAppSelector(playerState);
-
-
-
     const dispatch = useAppDispatch();
-
     const [filteredUser, setFilteredUser] = useState(users)
     const [search, searchChange] = useState(false)
-
     const searchValue = useRef("");
 
-
+    
     useEffect(() => {
         fetchPrevious()
     }, [])
@@ -103,24 +94,20 @@ export type singleUser = {
     return (
         <div >
             <div>
-
                 <div>
                     <br />
                     <Row >
                         <Col span={12} push={5}>
                             <Search placeholder="input search text" onSearch={onSearch} enterButton size='middle' />
                         </Col>
-                        {search && <Button onClick={fetchPrevious}> clear search</Button>}
                     </Row>
-                </div>
+                    {search && <Button onClick={fetchPrevious}> clear search</Button>}
 
+                </div>
                 <div className='players-parent  '>
                     {filtered && filtered?.map((item: singleUser) => <User {...item} key={item.id} />)}
                 </div>
-
-                <SingleMap />
-
-
+                {/* <SingleMap /> */}
                 <Button type="primary" disabled={infor.prev == null} onClick={prevPage}> prev </Button>
                 <Button type="primary" disabled={infor.next == null} onClick={nextPage}> next </Button>
             </div>
